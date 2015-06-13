@@ -1,8 +1,5 @@
 package slmt;
 
-import entity.TaxPayer;
-import list.LinkedList;
-
 import java.util.Scanner;
 
 public class Main {
@@ -21,10 +18,6 @@ public class Main {
                     flag = false;
             }
         }
-
-        TaxPayer tp = new TaxPayer("GC00556", "SolomonT", 1111, 123, 15);
-        LinkedList<TaxPayer> taxPayers = new LinkedList<>();
-        taxPayers.add(tp);
     }
 
     public static void printMenu() {

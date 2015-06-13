@@ -1,2 +1,6 @@
 **/.idea/*
 **/out/
+/Assignment1/nbproject/private/
+**/nbproject/
+build.xml
+manifest.mf

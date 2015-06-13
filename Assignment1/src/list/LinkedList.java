@@ -1,6 +1,7 @@
 package list;
 
 public class LinkedList<E> {
+
     public Node<E> first, last;
     private int size;
 
@@ -50,6 +51,7 @@ public class LinkedList<E> {
     }
 
     private static class Node<E> {
+
         E item;
         Node<E> next;
         Node<E> prev;

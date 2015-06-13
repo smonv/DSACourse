@@ -1,6 +1,7 @@
 package entity;
 
 public class TaxPayer {
+
     private String code, name;
     private double income, deduct, tax;
 
