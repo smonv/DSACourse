@@ -1,6 +1,9 @@
 package slmt;
 
+import controllers.FileController;
+import entity.TaxPayer;
 import java.util.Scanner;
+import list.LinkedList;
 
 public class Main {
 
@@ -13,6 +16,10 @@ public class Main {
             String s = sc.nextLine();
             int selection = Integer.parseInt(s.trim());
             switch (selection) {
+                case 1:
+                    FileController fc = new FileController();
+                    LinkedList taxPayers = fc.readData();
+                    taxPayers.traverse();
                 case 0:
                     System.out.println("Program exiting...! Bye");
                     flag = false;
