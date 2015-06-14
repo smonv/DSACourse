@@ -1,10 +1,8 @@
 package list;
 
-import entity.TaxPayer;
+public class LinkedList<E> {
 
-public class LinkedList {
-
-    private Node first, last;
+    private Node<E> first, last;
     private int size;
 
     public LinkedList() {
@@ -16,21 +14,21 @@ public class LinkedList {
         return first == null;
     }
 
-    public void add(TaxPayer tp) {
-        linkLast(tp);
+    public void add(E e) {
+        linkLast(e);
     }
 
-    public void addFirst(TaxPayer tp) {
-        linkFirst(tp);
+    public void addFirst(E e) {
+        linkFirst(e);
     }
 
-    public void addLast(TaxPayer tp) {
-        linkLast(tp);
+    public void addLast(E e) {
+        linkLast(e);
     }
 
-    public void linkFirst(TaxPayer tp) {
-        Node f = first;
-        Node newNode = new Node(null, tp, f);
+    public void linkFirst(E e) {
+        Node<E> f = first;
+        Node<E> newNode = new Node<>(null, e, f);
         first = newNode;
         if (f == null) {
             last = newNode;
@@ -40,9 +38,9 @@ public class LinkedList {
         size++;
     }
 
-    public void linkLast(TaxPayer tp) {
-        Node l = last;
-        Node newNode = new Node(l, tp, null);
+    public void linkLast(E e) {
+        Node<E> l = last;
+        Node<E> newNode = new Node<>(l, e, null);
         last = newNode;
         if (l == null) {
             first = newNode;
@@ -52,28 +50,20 @@ public class LinkedList {
         size++;
     }
 
-    public void traverse() {
-        Node n = first;
-        while (n != null) {
-            System.out.println(n.getTaxPayer().getCode() + " " + n.getTaxPayer().getName());
-            n = n.getNext();
-        }
+    public E getFirst() {
+        return first.item;
     }
 
-    public Node getFirst() {
-        return first;
+    public void setFirst(E e) {
+        linkFirst(e);
     }
 
-    public void setFirst(Node first) {
-        this.first = first;
+    public E getLast() {
+        return last.item;
     }
 
-    public Node getLast() {
-        return last;
-    }
-
-    public void setLast(Node last) {
-        this.last = last;
+    public void setLast(E e) {
+        linkLast(e);
     }
 
     public int getSize() {
@@ -83,42 +73,17 @@ public class LinkedList {
     public void setSize(int size) {
         this.size = size;
     }
-    
-    private static class Node {
 
-        private TaxPayer taxPayer;
-        private Node next;
-        private Node prev;
+    private static class Node<E> {
 
-        Node(Node prev, TaxPayer taxPayer, Node next) {
-            this.taxPayer = taxPayer;
+        E item;
+        Node<E> next;
+        Node<E> prev;
+
+        Node(Node<E> prev, E element, Node<E> next) {
+            this.item = element;
             this.next = next;
             this.prev = prev;
         }
-
-        public TaxPayer getTaxPayer() {
-            return taxPayer;
-        }
-
-        public void setTaxPayer(TaxPayer taxPayer) {
-            this.taxPayer = taxPayer;
-        }
-
-        public Node getNext() {
-            return next;
-        }
-
-        public void setNext(Node next) {
-            this.next = next;
-        }
-
-        public Node getPrev() {
-            return prev;
-        }
-
-        public void setPrev(Node prev) {
-            this.prev = prev;
-        }
-
     }
 }

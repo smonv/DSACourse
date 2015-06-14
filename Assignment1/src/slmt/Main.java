@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
         boolean flag = true;
         Scanner sc = new Scanner(System.in);
-        LinkedList taxPayers = new LinkedList();
+        LinkedList<TaxPayer> taxPayers = new LinkedList<>();
         FileController fc = new FileController();
         TaxController tc = new TaxController();
         while (flag) {
@@ -21,6 +21,7 @@ public class Main {
             switch (selection) {
                 case 1:
                     taxPayers = fc.loadData();
+                    System.out.println(taxPayers.getSize() + " rows.");
                     System.out.println("Data loaded!");
                 case 2:
                     if (taxPayers.isEmpty()) {
@@ -52,7 +53,7 @@ public class Main {
         System.out.println("Your selection (0 -> 10):");
     }
 
-    public static TaxPayer input(Scanner sc, TaxController tc, LinkedList taxPayers) {
+    public static TaxPayer input(Scanner sc, TaxController tc, LinkedList<TaxPayer> taxPayers) {
         System.out.println("Enter tax payer infomations: ");
         System.out.println("Enter Name: ");
         String name = sc.nextLine().trim();

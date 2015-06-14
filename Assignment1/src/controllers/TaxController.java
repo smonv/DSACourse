@@ -22,19 +22,20 @@ public class TaxController {
     }
 
     public Double countTax(Double income, Double deduct) {
+        income -= deduct;
+        Double tax = Double.MIN_NORMAL;
         if (income <= 5000) {
-            income += income * 0.05;
+            tax = income * 0.05;
         } else if (income > 5000 && income <= 10000) {
-            income += income * 0.1;
+            tax = income * 0.1;
         } else if (income > 10000) {
-            income += income * 0.15;
+            tax = income * 0.15;
         }
-        Double tax = income - deduct;
         return tax;
     }
 
-    public String generateTaxPayerCode(LinkedList taxPayers) {
-        TaxPayer tp = (TaxPayer) ((Object) taxPayers.getLast());
+    public String generateTaxPayerCode(LinkedList<TaxPayer> taxPayers) {
+        TaxPayer tp = taxPayers.getLast();
         int lastCode = Integer.parseInt(tp.getCode());
         String code = Integer.toString(++lastCode);
         return code;
