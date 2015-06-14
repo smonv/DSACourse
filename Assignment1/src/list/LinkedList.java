@@ -4,7 +4,7 @@ import entity.TaxPayer;
 
 public class LinkedList {
 
-    public Node first, last;
+    private Node first, last;
     private int size;
 
     public LinkedList() {
@@ -60,6 +60,30 @@ public class LinkedList {
         }
     }
 
+    public Node getFirst() {
+        return first;
+    }
+
+    public void setFirst(Node first) {
+        this.first = first;
+    }
+
+    public Node getLast() {
+        return last;
+    }
+
+    public void setLast(Node last) {
+        this.last = last;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+    
     private static class Node {
 
         private TaxPayer taxPayer;
