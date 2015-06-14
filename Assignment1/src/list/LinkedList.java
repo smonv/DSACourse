@@ -33,7 +33,7 @@ public class LinkedList<E> {
         if (f == null) {
             last = newNode;
         } else {
-            f.prev = newNode;
+            f.setPrev(newNode);
         }
         size++;
     }
@@ -45,13 +45,51 @@ public class LinkedList<E> {
         if (l == null) {
             first = newNode;
         } else {
-            l.next = newNode;
+            l.setNext(newNode);
         }
         size++;
     }
 
+    public void remove(Node<E> n) {
+        if (n == first) {
+            removeFirst();
+        } else if (n == last) {
+            removeLast();
+        } else {
+            Node<E> currentNext = n.getNext();
+            Node<E> currentPrev = n.getPrev();
+            currentPrev.setNext(currentNext);
+            currentNext.setPrev(currentPrev);
+            size--;
+        }
+    }
+
+    public void removeFirst() {
+        Node<E> n = first.getNext();
+        n.setPrev(null);
+        first.setNext(null);
+        first = n;
+        size--;
+    }
+
+    public void removeLast() {
+        Node<E> n = last.getPrev();
+        n.setNext(null);
+        last.setPrev(null);
+        last = n;
+        size--;
+    }
+
+    public void traverse() {
+        Node<E> n = first;
+        while (n != null) {
+            System.out.println(n.getItem().toString());
+            n = n.getNext();
+        }
+    }
+
     public E getFirst() {
-        return first.item;
+        return first.getItem();
     }
 
     public void setFirst(E e) {
@@ -59,7 +97,7 @@ public class LinkedList<E> {
     }
 
     public E getLast() {
-        return last.item;
+        return last.getItem();
     }
 
     public void setLast(E e) {
@@ -74,16 +112,11 @@ public class LinkedList<E> {
         this.size = size;
     }
 
-    private static class Node<E> {
+    public Node<E> getNodeFirst() {
+        return first;
+    }
 
-        E item;
-        Node<E> next;
-        Node<E> prev;
-
-        Node(Node<E> prev, E element, Node<E> next) {
-            this.item = element;
-            this.next = next;
-            this.prev = prev;
-        }
+    public Node<E> getNodeLast() {
+        return last;
     }
 }
