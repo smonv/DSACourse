@@ -15,11 +15,16 @@ public class FileController {
 
     private static String taxPayerFile = "TaxPayers.txt";
 
-    public LinkedList loadData() {
-        LinkedList taxPayers = new LinkedList();
+    public LinkedList loadData() throws IOException {
+        LinkedList<TaxPayer> taxPayers = new LinkedList<>();
+        File inFile = new File(taxPayerFile);
+        if (!inFile.exists()) {
+            return taxPayers;
+        }
+
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new FileReader(new File(taxPayerFile)));
+            br = new BufferedReader(new FileReader(inFile));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] infos = line.split("\\|");
@@ -32,97 +37,46 @@ public class FileController {
                 TaxPayer tp = new TaxPayer(code, name, income, deduct, tax);
                 taxPayers.add(tp);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
             if (br != null) {
-                try {
-                    br.close();
-                } catch (Exception e) {
-                }
+                br.close();
             }
         }
-
         return taxPayers;
     }
 
-    public boolean saveData(LinkedList<ModifiedTaxPayer> modifiedTaxPayers, TaxController tc) {
-        boolean result = false;
-        result = removeData(tc.getRemovedTaxPayers(modifiedTaxPayers));
-        result = addData(tc.getAddedTaxPayers(modifiedTaxPayers));
-        return true;
-    }
-
-    public boolean removeData(LinkedList<ModifiedTaxPayer> removedTaxPayers) {
-        if (removedTaxPayers.isEmpty()) {
-            return true;
-        }
-        File taxPayersFile = new File(taxPayerFile);
-        File tmp = new File("TaxPayers.tmp");
-        BufferedReader br = null;
-        BufferedWriter bw = null;
-        try {
-            br = new BufferedReader(new FileReader(taxPayersFile));
-            bw = new BufferedWriter(new FileWriter(tmp, true));
-            String line;
-            while ((line = br.readLine()) != null) {
-                Node<ModifiedTaxPayer> n = removedTaxPayers.getNodeFirst();
-                while (n != null) {
-                    if (!n.getItem().getTp().getCode().equals(line.split("\\|")[0].trim())) {
-                        bw.append(String.join(" | ", line.split("\\|")));
-                        bw.newLine();
-                        bw.flush();
-                    }
-                }
-            }
-            taxPayersFile.delete();
-            tmp.renameTo(new File(taxPayerFile));
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+    public boolean saveData(LinkedList<TaxPayer> taxPayers) throws IOException {
+        if (taxPayers == null || taxPayers.isEmpty()) {
             return false;
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (Exception e) {
-                }
-            }
+        }
 
-            if (bw != null) {
-                try {
-                    bw.close();
-                } catch (Exception e) {
-                }
+        File inFile = new File(taxPayerFile);
+
+        if (inFile.exists()) {
+            if (!inFile.delete()) {
+                return false;
             }
         }
-    }
-
-    public boolean addData(LinkedList<ModifiedTaxPayer> addedTaxPayers) {
-        if (addedTaxPayers.isEmpty()) {
-            return true;
-        }
+        File newFile = new File(taxPayerFile);
         BufferedWriter bw = null;
         try {
-            bw = new BufferedWriter(new FileWriter(taxPayerFile, true));
-            Node<ModifiedTaxPayer> n = addedTaxPayers.getNodeFirst();
+            bw = new BufferedWriter(new FileWriter(newFile, true));
+
+            Node<TaxPayer> n = taxPayers.getNodeFirst();
             while (n != null) {
-                TaxPayer tp = n.getItem().getTp();
-                String[] infos = new String[5];
-                infos[0] = tp.getCode();
-                infos[1] = tp.getName();
-                infos[2] = Double.toString(tp.getIncome());
-                infos[3] = Double.toString(tp.getDeduct());
-                infos[4] = Double.toString(tp.getTax());
-                bw.append(String.join(" | ", infos));
+                TaxPayer tp = n.getItem();
+                String[] info = {tp.getCode(), tp.getName(), Double.toString(tp.getIncome()), Double.toString(tp.getDeduct()), Double.toString(tp.getTax())};
+                String line = String.join(" | ", info);
+                bw.append(line);
+                bw.newLine();
                 bw.flush();
+                n = n.getNext();
             }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        } finally {
+            if (bw != null) {
+                bw.close();
+            }
         }
+        return newFile.getUsableSpace() > 0;
     }
-
 }

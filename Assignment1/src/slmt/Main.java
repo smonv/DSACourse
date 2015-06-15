@@ -4,12 +4,13 @@ import controllers.FileController;
 import controllers.TaxController;
 import entity.ModifiedTaxPayer;
 import entity.TaxPayer;
+import java.io.IOException;
 import java.util.Scanner;
 import list.LinkedList;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         boolean flag = true;
         Scanner sc = new Scanner(System.in);
         LinkedList<TaxPayer> taxPayers = new LinkedList<>();
@@ -26,6 +27,7 @@ public class Main {
                     System.out.println(taxPayers.getSize() + " rows.");
                     System.out.println("Data loaded!");
                     break;
+
                 case 2:
                     if (taxPayers.isEmpty()) {
                         taxPayers = fc.loadData();
@@ -34,23 +36,23 @@ public class Main {
                     tc.add(tp, taxPayers, modifiedTaxPayers);
                     System.out.println("New tax payers added!");
                     break;
+
                 case 3:
                     if (taxPayers.isEmpty()) {
                         taxPayers = fc.loadData();
                     }
                     taxPayers.traverse();
                     break;
+
                 case 4:
                     if (taxPayers.isEmpty()) {
                         taxPayers = fc.loadData();
                     }
-                    boolean result = tc.saveDataToFile(modifiedTaxPayers);
-                    if (result) {
-                        System.out.println("Data saved to file!");
-                    } else {
-                        System.out.println("Failed to save data to file!");
-                    }
+                    boolean result = tc.saveDataToFile(taxPayers);
+                    String msg = result ? "Data saved to file!" : "Failed to save data to file!";
+                    System.out.println(msg);
                     break;
+
                 case 5:
                     if (taxPayers.isEmpty()) {
                         taxPayers = fc.loadData();
@@ -58,8 +60,13 @@ public class Main {
                     System.out.println("Enter tax payer code: ");
                     String searchCode = sc.nextLine();
                     TaxPayer tpSearch = tc.search(searchCode, taxPayers);
-                    System.out.println(tpSearch);
+                    if (tpSearch != null) {
+                        System.out.println(tpSearch);
+                    } else {
+                        System.out.println("No result found!");
+                    }
                     break;
+
                 case 6:
                     if (taxPayers.isEmpty()) {
                         taxPayers = fc.loadData();
@@ -68,6 +75,7 @@ public class Main {
                     String removeCode = sc.nextLine();
                     tc.remove(removeCode, taxPayers, modifiedTaxPayers);
                     break;
+
                 case 0:
                     if (modifiedTaxPayers.isEmpty()) {
                     } else {
