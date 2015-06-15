@@ -11,14 +11,17 @@ public class TaxController {
     FileController fc = new FileController();
 
     public void add(TaxPayer tp, LinkedList<TaxPayer> taxPayers, LinkedList<ModifiedTaxPayer> modifiedTaxPayers) {
-        String[] infos = new String[5];
-        infos[0] = tp.getCode();
-        infos[1] = tp.getName();
-        infos[2] = Double.toString(tp.getIncome());
-        infos[3] = Double.toString(tp.getDeduct());
-        infos[4] = Double.toString(tp.getTax());
-
         taxPayers.add(tp);
+        modifiedTaxPayers.add(new ModifiedTaxPayer(tp, true));
+    }
+
+    public void addFirst(TaxPayer tp, LinkedList<TaxPayer> taxPayers, LinkedList<ModifiedTaxPayer> modifiedTaxPayers) {
+        taxPayers.addFirst(tp);
+        modifiedTaxPayers.add(new ModifiedTaxPayer(tp, true));
+    }
+
+    public void addAfter(TaxPayer tp, Node<TaxPayer> node, LinkedList<TaxPayer> taxPayers, LinkedList<ModifiedTaxPayer> modifiedTaxPayers) {
+        taxPayers.addAfter(tp, node);
         modifiedTaxPayers.add(new ModifiedTaxPayer(tp, true));
     }
 
@@ -54,6 +57,20 @@ public class TaxController {
                 return n;
             } else {
                 n = n.getNext();
+            }
+        }
+        return null;
+    }
+
+    public Node<TaxPayer> searchPosition(int k, LinkedList<TaxPayer> taxPayers) {
+        Node<TaxPayer> n = taxPayers.getNodeFirst();
+        int i = 0;
+        while (n != null) {
+            if (i == k - 1) {
+                return n;
+            } else {
+                n = n.getNext();
+                i++;
             }
         }
         return null;

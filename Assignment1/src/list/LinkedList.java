@@ -25,6 +25,10 @@ public class LinkedList<E> {
     public void addLast(E e) {
         linkLast(e);
     }
+    
+    public void addAfter(E e, Node<E> n){
+        linkAfter(e, n);
+    }
 
     public void linkFirst(E e) {
         Node<E> f = first;
@@ -47,6 +51,14 @@ public class LinkedList<E> {
         } else {
             l.setNext(newNode);
         }
+        size++;
+    }
+
+    public void linkAfter(E e, Node<E> n) {
+        Node<E> after = n.getNext();
+        Node<E> newNode = new Node<>(n, e, after);
+        n.setNext(newNode);
+        after.setPrev(newNode);
         size++;
     }
 
@@ -78,6 +90,11 @@ public class LinkedList<E> {
         last.setPrev(null);
         last = n;
         size--;
+    }
+
+    public void removeAll() {
+        first = last = null;
+        size = 0;
     }
 
     public void traverse() {
