@@ -1,6 +1,5 @@
 package controllers;
 
-import entity.ModifiedTaxPayer;
 import entity.TaxPayer;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
