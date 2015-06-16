@@ -14,114 +14,121 @@ public class Main {
     public static void main(String[] args) throws IOException {
         boolean flag = true;
         Scanner sc = new Scanner(System.in);
-        LinkedList<TaxPayer> taxPayers = new LinkedList<>();
-        LinkedList<ModifiedTaxPayer> modifiedTaxPayers = new LinkedList<>();
         FileController fc = new FileController();
         TaxController tc = new TaxController();
+        LinkedList<TaxPayer> taxPayers = fc.loadData();
+        LinkedList<ModifiedTaxPayer> modifiedTaxPayers = new LinkedList<>();
+
         while (flag) {
             printMenu();
             String s = sc.nextLine();
-            int selection = Integer.parseInt(s.trim());
-            switch (selection) {
-                case 1:
-                    taxPayers = fc.loadData();
-                    System.out.println(taxPayers.getSize() + " rows.");
-                    System.out.println("Data loaded!");
-                    break;
-
-                case 2:
-                    if (taxPayers.isEmpty()) {
+            if (!"".equals(s)) {
+                int selection = Integer.parseInt(s.trim());
+                switch (selection) {
+                    case 1:
                         taxPayers = fc.loadData();
-                    }
-                    TaxPayer newTaxPayer = input(sc, tc);
-                    tc.add(newTaxPayer, taxPayers, modifiedTaxPayers);
-                    System.out.println("New tax payers added!");
-                    break;
+                        System.out.println(taxPayers.getSize() + " rows.");
+                        System.out.println("Data loaded!");
+                        break;
 
-                case 3:
-                    if (taxPayers.isEmpty()) {
-                        taxPayers = fc.loadData();
-                    }
-                    taxPayers.traverse();
-                    break;
+                    case 2:
+                        TaxPayer newTaxPayer = input(sc, tc);
+                        tc.add(newTaxPayer, taxPayers, modifiedTaxPayers);
+                        System.out.println("New tax payers added!");
+                        break;
 
-                case 4:
-                    if (taxPayers.isEmpty()) {
-                        taxPayers = fc.loadData();
-                    }
-                    boolean result = tc.saveDataToFile(taxPayers);
-                    if (result) {
-                        modifiedTaxPayers.removeAll();
-                    }
-                    String msg = result ? "Data saved to file!" : "Failed to save data to file!";
-                    System.out.println(msg);
-                    break;
+                    case 3:
+                        taxPayers.traverse();
+                        break;
 
-                case 5:
-                    if (taxPayers.isEmpty()) {
-                        taxPayers = fc.loadData();
-                    }
-                    System.out.println("Enter tax payer code: ");
-                    String searchCode = sc.nextLine();
-                    TaxPayer tpSearch = tc.search(searchCode, taxPayers);
-                    if (tpSearch != null) {
-                        System.out.println(tpSearch);
-                    } else {
-                        System.out.println("No result found!");
-                    }
-                    break;
+                    case 4:
+                        boolean result = tc.saveDataToFile(taxPayers);
+                        if (result) {
+                            modifiedTaxPayers.removeAll();
+                        }
+                        String msg = result ? "Data saved to file!" : "Failed to save data to file!";
+                        System.out.println(msg);
+                        break;
 
-                case 6:
-                    if (taxPayers.isEmpty()) {
-                        taxPayers = fc.loadData();
-                    }
-                    System.out.println("Enter tax payer code: ");
-                    String removeCode = sc.nextLine();
-                    tc.remove(removeCode, taxPayers, modifiedTaxPayers);
-                    break;
+                    case 5:
+                        System.out.println("Enter tax payer code: ");
+                        String searchCode = sc.nextLine();
+                        TaxPayer tpSearch = tc.search(searchCode, taxPayers);
+                        if (tpSearch != null) {
+                            System.out.println(tpSearch);
+                        } else {
+                            System.out.println("No result found!");
+                        }
+                        break;
 
-                case 7:
-                    break;
+                    case 6:
+                        if (taxPayers.isEmpty()) {
+                            taxPayers = fc.loadData();
+                        }
+                        System.out.println("Enter tax payer code: ");
+                        String removeCode = sc.nextLine();
+                        tc.remove(removeCode, taxPayers, modifiedTaxPayers);
+                        break;
 
-                case 8:
-                    loadData(taxPayers, fc);
-                    TaxPayer newTaxPayerFirst = input(sc, tc);
-                    tc.addFirst(newTaxPayerFirst, taxPayers, modifiedTaxPayers);
-                    System.out.println("New tax payer added!");
-                    break;
+                    case 7:
+                        taxPayers = tc.sort(taxPayers);
+                        System.out.println("Data sorted!");
+                        break;
 
-                case 9:
-                    loadData(taxPayers, fc);
-                    System.out.println("Enter position k (number): ");
-                    int k = Integer.parseInt(sc.nextLine());
-                    if (k < taxPayers.getSize()) {
-                        Node<TaxPayer> nodePosition = tc.searchPosition(k, taxPayers);
-                        TaxPayer newTaxPayerAfter = input(sc, tc);
-                        tc.addAfter(newTaxPayerAfter, nodePosition, taxPayers, modifiedTaxPayers);
+                    case 8:
+                        TaxPayer newTaxPayerFirst = input(sc, tc);
+                        tc.addFirst(newTaxPayerFirst, taxPayers, modifiedTaxPayers);
                         System.out.println("New tax payer added!");
-                    } else {
-                        System.out.println("Position k is not valid!");
-                    }
-                    break;
+                        break;
 
-                case 10:
-                    break;
+                    case 9:
+                        System.out.println("Enter position k (number): ");
+                        int kAdd = Integer.parseInt(sc.nextLine());
+                        if (kAdd < taxPayers.getSize()) {
+                            Node<TaxPayer> nodePosition = taxPayers.elementAt(kAdd);
+                            TaxPayer newTaxPayerAfter = input(sc, tc);
+                            tc.addAfter(newTaxPayerAfter, nodePosition, taxPayers, modifiedTaxPayers);
+                            System.out.println("New tax payer added!");
+                        } else {
+                            System.out.println("Invalid position!");
+                        }
+                        break;
 
-                case 0:
-                    if (!modifiedTaxPayers.isEmpty()) {
-                        System.out.println("Data modified but not save! Confirm exit(Y/N): ");
-                        String confirm = sc.nextLine();
-                        flag = !confirm.equals("Y");
-                    } else {
-                        flag = false;
-                    }
+                    case 10:
+                        System.out.println("Enter position k (number): ");
+                        int kDel = Integer.parseInt(sc.nextLine());
+                        if (kDel < taxPayers.getSize()) {
+                            Node<TaxPayer> nodePosition = taxPayers.elementAt(kDel);
+                            tc.removePosition(nodePosition, taxPayers, modifiedTaxPayers);
+                            System.out.println("Tax payer deleted!");
+                        } else {
+                            System.out.println("Invalid position!");
+                        }
+                        break;
 
-                    if (!flag) {
-                        System.out.println("Program exiting...! Bye");
-                    } else {
-                        System.out.println("Use option 4 to save data!");
-                    }
-                    break;
+                    case 0:
+                        if (!modifiedTaxPayers.isEmpty()) {
+                            System.out.println("Data modified but not save! Confirm exit(Y/N): ");
+                            String confirm = sc.nextLine();
+                            if ("Y".equals(confirm)) {
+                                fc.saveData(taxPayers);
+                            } else {
+                                flag = !confirm.equals("Y");
+                            }
+                        } else {
+                            flag = false;
+                        }
+
+                        if (!flag) {
+                            System.out.println("Program exiting...! Bye");
+                        } else {
+                            System.out.println("Use option 4 to save data!");
+                        }
+                        break;
+                }
+            }else{
+                System.out.println("Please enter an option number!");
+                System.out.println("------------------------------");
             }
         }
     }
@@ -156,11 +163,5 @@ public class Main {
 
         TaxPayer tp = new TaxPayer(code, name, income, deduct, tax);
         return tp;
-    }
-
-    public static void loadData(LinkedList<TaxPayer> taxPayers, FileController fc) throws IOException {
-        if (taxPayers.isEmpty()) {
-            taxPayers = fc.loadData();
-        }
     }
 }

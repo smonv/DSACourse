@@ -3,6 +3,9 @@ package controllers;
 import entity.ModifiedTaxPayer;
 import entity.TaxPayer;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import list.LinkedList;
 import list.Node;
 
@@ -62,26 +65,34 @@ public class TaxController {
         return null;
     }
 
-    public Node<TaxPayer> searchPosition(int k, LinkedList<TaxPayer> taxPayers) {
-        Node<TaxPayer> n = taxPayers.getNodeFirst();
-        int i = 0;
-        while (n != null) {
-            if (i == k - 1) {
-                return n;
-            } else {
-                n = n.getNext();
-                i++;
-            }
-        }
-        return null;
-    }
-
     public void remove(String code, LinkedList<TaxPayer> taxPayers, LinkedList<ModifiedTaxPayer> modifiedTaxPayers) {
         Node<TaxPayer> n = searchNode(code, taxPayers);
         if (n != null) {
             taxPayers.remove(n);
             modifiedTaxPayers.add(new ModifiedTaxPayer(n.getItem(), false));
         }
+    }
+
+    public void removePosition(Node<TaxPayer> position, LinkedList<TaxPayer> taxPayers, LinkedList<ModifiedTaxPayer> modifiedTaxPayers) {
+        taxPayers.remove(position);
+        modifiedTaxPayers.add(new ModifiedTaxPayer(position.getItem(), false));
+    }
+
+    public LinkedList<TaxPayer> sort(LinkedList<TaxPayer> taxPayers) {
+        List<TaxPayer> tmpTaxPayers = new ArrayList<>();
+        Node<TaxPayer> n = taxPayers.getNodeFirst();
+        while (n != null) {
+            tmpTaxPayers.add(n.getItem());
+            n = n.getNext();
+        }
+        Collections.sort(tmpTaxPayers);
+        LinkedList<TaxPayer> newTaxPayers = new LinkedList<>();
+        
+        for (TaxPayer tp : tmpTaxPayers) {
+            newTaxPayers.add(tp);
+        }
+
+        return newTaxPayers;
     }
 
     public boolean saveDataToFile(LinkedList<TaxPayer> taxPayers) throws IOException {

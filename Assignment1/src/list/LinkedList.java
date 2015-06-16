@@ -25,8 +25,8 @@ public class LinkedList<E> {
     public void addLast(E e) {
         linkLast(e);
     }
-    
-    public void addAfter(E e, Node<E> n){
+
+    public void addAfter(E e, Node<E> n) {
         linkAfter(e, n);
     }
 
@@ -103,6 +103,23 @@ public class LinkedList<E> {
             System.out.println(n.getItem().toString());
             n = n.getNext();
         }
+    }
+
+    public Node<E> elementAt(int k) {
+        if (k > size - 1) {
+            return null;
+        }
+        Node<E> n = first;
+        int i = 0;
+        while (n != null) {
+            if (i == k) {
+                return n;
+            } else {
+                n = n.getNext();
+                i++;
+            }
+        }
+        return null;
     }
 
     public E getFirst() {

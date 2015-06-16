@@ -1,6 +1,6 @@
 package entity;
 
-public class TaxPayer {
+public class TaxPayer implements Comparable<TaxPayer> {
 
     private String code, name;
     private double income, deduct, tax;
@@ -67,5 +67,10 @@ public class TaxPayer {
 
     public void setTax(double tax) {
         this.tax = tax;
+    }
+
+    @Override
+    public int compareTo(TaxPayer o) {
+        return this.getCode().compareTo(o.getCode());
     }
 }
