@@ -58,7 +58,9 @@ public class LinkedList<E> {
         Node<E> after = n.getNext();
         Node<E> newNode = new Node<>(n, e, after);
         n.setNext(newNode);
-        after.setPrev(newNode);
+        if (after != null) {
+            after.setPrev(newNode);
+        }
         size++;
     }
 
