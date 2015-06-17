@@ -1,6 +1,5 @@
 package controllers;
 
-import entity.ModifiedTaxPayer;
 import entity.TaxPayer;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,19 +12,16 @@ public class TaxController {
 
     FileController fc = new FileController();
 
-    public void add(TaxPayer tp, LinkedList<TaxPayer> taxPayers, LinkedList<ModifiedTaxPayer> modifiedTaxPayers) {
+    public void add(TaxPayer tp, LinkedList<TaxPayer> taxPayers) {
         taxPayers.add(tp);
-        modifiedTaxPayers.add(new ModifiedTaxPayer(tp, true));
     }
 
-    public void addFirst(TaxPayer tp, LinkedList<TaxPayer> taxPayers, LinkedList<ModifiedTaxPayer> modifiedTaxPayers) {
+    public void addFirst(TaxPayer tp, LinkedList<TaxPayer> taxPayers) {
         taxPayers.addFirst(tp);
-        modifiedTaxPayers.add(new ModifiedTaxPayer(tp, true));
     }
 
-    public void addAfter(TaxPayer tp, Node<TaxPayer> node, LinkedList<TaxPayer> taxPayers, LinkedList<ModifiedTaxPayer> modifiedTaxPayers) {
+    public void addAfter(TaxPayer tp, Node<TaxPayer> node, LinkedList<TaxPayer> taxPayers) {
         taxPayers.addAfter(tp, node);
-        modifiedTaxPayers.add(new ModifiedTaxPayer(tp, true));
     }
 
     public Double countTax(Double income, Double deduct) {
@@ -65,17 +61,15 @@ public class TaxController {
         return null;
     }
 
-    public void remove(String code, LinkedList<TaxPayer> taxPayers, LinkedList<ModifiedTaxPayer> modifiedTaxPayers) {
+    public void remove(String code, LinkedList<TaxPayer> taxPayers) {
         Node<TaxPayer> n = searchNode(code, taxPayers);
         if (n != null) {
             taxPayers.remove(n);
-            modifiedTaxPayers.add(new ModifiedTaxPayer(n.getItem(), false));
         }
     }
 
-    public void removePosition(Node<TaxPayer> position, LinkedList<TaxPayer> taxPayers, LinkedList<ModifiedTaxPayer> modifiedTaxPayers) {
+    public void removePosition(Node<TaxPayer> position, LinkedList<TaxPayer> taxPayers) {
         taxPayers.remove(position);
-        modifiedTaxPayers.add(new ModifiedTaxPayer(position.getItem(), false));
     }
 
     public LinkedList<TaxPayer> sort(LinkedList<TaxPayer> taxPayers) {
@@ -87,7 +81,7 @@ public class TaxController {
         }
         Collections.sort(tmpTaxPayers);
         LinkedList<TaxPayer> newTaxPayers = new LinkedList<>();
-        
+
         for (TaxPayer tp : tmpTaxPayers) {
             newTaxPayers.add(tp);
         }

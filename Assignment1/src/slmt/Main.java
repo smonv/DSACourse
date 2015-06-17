@@ -2,7 +2,6 @@ package slmt;
 
 import controllers.FileController;
 import controllers.TaxController;
-import entity.ModifiedTaxPayer;
 import entity.TaxPayer;
 import java.io.IOException;
 import java.util.Scanner;
@@ -17,7 +16,7 @@ public class Main {
         FileController fc = new FileController();
         TaxController tc = new TaxController();
         LinkedList<TaxPayer> taxPayers = fc.loadData();
-        LinkedList<ModifiedTaxPayer> modifiedTaxPayers = new LinkedList<>();
+        int taxPayersDefaultSize = taxPayers.getSize();
 
         while (flag) {
             printMenu();
@@ -33,7 +32,7 @@ public class Main {
 
                     case 2:
                         TaxPayer newTaxPayer = input(sc, tc);
-                        tc.add(newTaxPayer, taxPayers, modifiedTaxPayers);
+                        tc.add(newTaxPayer, taxPayers);
                         System.out.println("New tax payers added!");
                         break;
 
@@ -44,7 +43,7 @@ public class Main {
                     case 4:
                         boolean result = tc.saveDataToFile(taxPayers);
                         if (result) {
-                            modifiedTaxPayers.removeAll();
+                            taxPayersDefaultSize = taxPayers.getSize();
                         }
                         String msg = result ? "Data saved to file!" : "Failed to save data to file!";
                         System.out.println(msg);
@@ -67,7 +66,7 @@ public class Main {
                         }
                         System.out.println("Enter tax payer code: ");
                         String removeCode = sc.nextLine();
-                        tc.remove(removeCode, taxPayers, modifiedTaxPayers);
+                        tc.remove(removeCode, taxPayers);
                         break;
 
                     case 7:
@@ -77,7 +76,7 @@ public class Main {
 
                     case 8:
                         TaxPayer newTaxPayerFirst = input(sc, tc);
-                        tc.addFirst(newTaxPayerFirst, taxPayers, modifiedTaxPayers);
+                        tc.addFirst(newTaxPayerFirst, taxPayers);
                         System.out.println("New tax payer added!");
                         break;
 
@@ -87,7 +86,7 @@ public class Main {
                         if (kAdd < taxPayers.getSize()) {
                             Node<TaxPayer> nodePosition = taxPayers.elementAt(kAdd);
                             TaxPayer newTaxPayerAfter = input(sc, tc);
-                            tc.addAfter(newTaxPayerAfter, nodePosition, taxPayers, modifiedTaxPayers);
+                            tc.addAfter(newTaxPayerAfter, nodePosition, taxPayers);
                             System.out.println("New tax payer added!");
                         } else {
                             System.out.println("Invalid position!");
@@ -99,7 +98,7 @@ public class Main {
                         int kDel = Integer.parseInt(sc.nextLine());
                         if (kDel < taxPayers.getSize()) {
                             Node<TaxPayer> nodePosition = taxPayers.elementAt(kDel);
-                            tc.removePosition(nodePosition, taxPayers, modifiedTaxPayers);
+                            tc.removePosition(nodePosition, taxPayers);
                             System.out.println("Tax payer deleted!");
                         } else {
                             System.out.println("Invalid position!");
@@ -107,7 +106,7 @@ public class Main {
                         break;
 
                     case 0:
-                        if (!modifiedTaxPayers.isEmpty()) {
+                        if (taxPayersDefaultSize != taxPayers.getSize()) {
                             System.out.println("Data modified but not save! Confirm exit(Y/N): ");
                             String confirm = sc.nextLine();
                             if ("Y".equals(confirm)) {
@@ -126,7 +125,7 @@ public class Main {
                         }
                         break;
                 }
-            }else{
+            } else {
                 System.out.println("Please enter an option number!");
                 System.out.println("------------------------------");
             }
