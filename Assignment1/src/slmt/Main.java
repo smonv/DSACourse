@@ -26,8 +26,8 @@ public class Main {
                 switch (selection) {
                     case 1:
                         taxPayers = fc.loadData();
-                        System.out.println(taxPayers.getSize() + " rows.");
-                        System.out.println("Data loaded!");
+                        taxPayersDefaultSize = taxPayers.getSize();
+                        System.out.println("Loaded " + taxPayers.getSize() + " rows.");
                         break;
 
                     case 2:

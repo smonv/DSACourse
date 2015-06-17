@@ -14,7 +14,7 @@ public class FileController {
 
     private static String taxPayerFile = "TaxPayers.txt";
 
-    public LinkedList loadData() throws IOException {
+    public LinkedList<TaxPayer> loadData() throws IOException {
         LinkedList<TaxPayer> taxPayers = new LinkedList<>();
         File inFile = new File(taxPayerFile);
         if (!inFile.exists()) {
@@ -64,7 +64,13 @@ public class FileController {
             Node<TaxPayer> n = taxPayers.getNodeFirst();
             while (n != null) {
                 TaxPayer tp = n.getItem();
-                String[] info = {tp.getCode(), tp.getName(), Double.toString(tp.getIncome()), Double.toString(tp.getDeduct()), Double.toString(tp.getTax())};
+                String[] info = {
+                    tp.getCode(), tp.getName(),
+                    Double.toString(tp.getIncome()),
+                    Double.toString(tp.getDeduct()),
+                    Double.toString(tp.getTax())
+                };
+
                 String line = String.join(" | ", info);
                 bw.append(line);
                 bw.newLine();
