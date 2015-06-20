@@ -6,7 +6,6 @@ import entity.TaxPayer;
 import java.io.IOException;
 import java.util.Scanner;
 import list.LinkedList;
-import list.Node;
 
 public class Main {
 
@@ -32,7 +31,7 @@ public class Main {
 
                     case 2:
                         TaxPayer newTaxPayer = input(sc, tc);
-                        tc.add(newTaxPayer, taxPayers);
+                        taxPayers.add(newTaxPayer);
                         System.out.println("New tax payers added!");
                         break;
 
@@ -41,7 +40,8 @@ public class Main {
                         break;
 
                     case 4:
-                        boolean result = tc.saveDataToFile(taxPayers);
+                        taxPayers = taxPayers.sort();
+                        boolean result = fc.saveData(taxPayers);
                         if (result) {
                             taxPayersDefaultSize = taxPayers.getSize();
                         }
@@ -52,7 +52,7 @@ public class Main {
                     case 5:
                         System.out.println("Enter tax payer code: ");
                         String searchCode = sc.nextLine();
-                        TaxPayer tpSearch = tc.search(searchCode, taxPayers);
+                        TaxPayer tpSearch = taxPayers.search(new TaxPayer(searchCode));
                         if (tpSearch != null) {
                             System.out.println(tpSearch);
                         } else {
@@ -66,17 +66,17 @@ public class Main {
                         }
                         System.out.println("Enter tax payer code: ");
                         String removeCode = sc.nextLine();
-                        tc.remove(removeCode, taxPayers);
+                        taxPayers.remove(new TaxPayer(removeCode));
                         break;
 
                     case 7:
-                        taxPayers = tc.sort(taxPayers);
-                        System.out.println("Data sorted!");
+                        taxPayers = taxPayers.sort();
+                        taxPayers.traverse();
                         break;
 
                     case 8:
                         TaxPayer newTaxPayerFirst = input(sc, tc);
-                        tc.addFirst(newTaxPayerFirst, taxPayers);
+                        taxPayers.addFirst(newTaxPayerFirst);
                         System.out.println("New tax payer added!");
                         break;
 
@@ -84,9 +84,8 @@ public class Main {
                         System.out.println("Enter position k (number): ");
                         int kAdd = Integer.parseInt(sc.nextLine());
                         if (kAdd < taxPayers.getSize()) {
-                            Node<TaxPayer> nodePosition = taxPayers.elementAt(kAdd);
                             TaxPayer newTaxPayerAfter = input(sc, tc);
-                            tc.addAfter(newTaxPayerAfter, nodePosition, taxPayers);
+                            taxPayers.addAfter(newTaxPayerAfter, kAdd);
                             System.out.println("New tax payer added!");
                         } else {
                             System.out.println("Invalid position!");
@@ -97,8 +96,7 @@ public class Main {
                         System.out.println("Enter position k (number): ");
                         int kDel = Integer.parseInt(sc.nextLine());
                         if (kDel < taxPayers.getSize()) {
-                            Node<TaxPayer> nodePosition = taxPayers.elementAt(kDel);
-                            tc.removePosition(nodePosition, taxPayers);
+                            taxPayers.removeAfter(kDel);
                             System.out.println("Tax payer deleted!");
                         } else {
                             System.out.println("Invalid position!");

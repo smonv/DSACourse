@@ -1,40 +1,46 @@
 package list;
 
-public class Node<E> {
+public class Node<T extends Comparable<T>> implements Comparable<Node<T>>{
 
-    private E item;
-    private Node<E> next;
-    private Node<E> prev;
+    private T data;
+    private Node<T> next;
+    private Node<T> prev;
 
-    Node(Node<E> prev, E element, Node<E> next) {
-        this.item = element;
+    Node(Node<T> prev, T data, Node<T> next) {
+        this.data = data;
         this.next = next;
         this.prev = prev;
     }
 
-    public E getItem() {
-        return item;
+    @Override
+    public int compareTo(Node<T> o) {
+        return this.compareTo(o);
     }
 
-    public void setItem(E item) {
-        this.item = item;
+    public T getData() {
+        return data;
     }
 
-    public Node<E> getNext() {
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public Node<T> getNext() {
         return next;
     }
 
-    public void setNext(Node<E> next) {
+    public void setNext(Node<T> next) {
         this.next = next;
     }
 
-    public Node<E> getPrev() {
+    public Node<T> getPrev() {
         return prev;
     }
 
-    public void setPrev(Node<E> prev) {
+    public void setPrev(Node<T> prev) {
         this.prev = prev;
     }
+    
     
     
 }

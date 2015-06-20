@@ -1,8 +1,12 @@
 package list;
 
-public class LinkedList<E> {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-    private Node<E> first, last;
+public class LinkedList<T extends Comparable<T>> implements Comparable<Node<T>> {
+
+    private Node<T> first, last;
     private int size;
 
     public LinkedList() {
@@ -14,25 +18,29 @@ public class LinkedList<E> {
         return first == null;
     }
 
-    public void add(E e) {
-        linkLast(e);
+    public void add(T data) {
+        linkLast(data);
     }
 
-    public void addFirst(E e) {
-        linkFirst(e);
+    public void addFirst(T data) {
+        linkFirst(data);
     }
 
-    public void addLast(E e) {
-        linkLast(e);
+    public void addLast(T data) {
+        linkLast(data);
     }
 
-    public void addAfter(E e, Node<E> n) {
-        linkAfter(e, n);
+    public void addAfter(T data, Node<T> node) {
+        linkAfter(data, node);
     }
 
-    public void linkFirst(E e) {
-        Node<E> f = first;
-        Node<E> newNode = new Node<>(null, e, f);
+    public void addAfter(T data, int position) {
+        addAfter(data, elementAt(position));
+    }
+
+    public void linkFirst(T data) {
+        Node<T> f = first;
+        Node<T> newNode = new Node<>(null, data, f);
         first = newNode;
         if (f == null) {
             last = newNode;
@@ -42,9 +50,9 @@ public class LinkedList<E> {
         size++;
     }
 
-    public void linkLast(E e) {
-        Node<E> l = last;
-        Node<E> newNode = new Node<>(l, e, null);
+    public void linkLast(T data) {
+        Node<T> l = last;
+        Node<T> newNode = new Node<>(l, data, null);
         last = newNode;
         if (l == null) {
             first = newNode;
@@ -54,24 +62,37 @@ public class LinkedList<E> {
         size++;
     }
 
-    public void linkAfter(E e, Node<E> n) {
-        Node<E> after = n.getNext();
-        Node<E> newNode = new Node<>(n, e, after);
-        n.setNext(newNode);
+    public void linkAfter(T data, Node<T> node) {
+        Node<T> after = node.getNext();
+        Node<T> newNode = new Node<>(node, data, after);
+        node.setNext(newNode);
         if (after != null) {
             after.setPrev(newNode);
         }
         size++;
     }
 
-    public void remove(Node<E> n) {
+    public Node<T> searchNode(T data) {
+        Node<T> n = this.first;
+        while (n != null) {
+            if (n.getData().compareTo(data) == 0) {
+                return n;
+            } else {
+                n = n.getNext();
+            }
+        }
+        return null;
+    }
+
+    public void remove(T data) {
+        Node<T> n = searchNode(data);
         if (n == first) {
             removeFirst();
         } else if (n == last) {
             removeLast();
         } else {
-            Node<E> currentNext = n.getNext();
-            Node<E> currentPrev = n.getPrev();
+            Node<T> currentNext = n.getNext();
+            Node<T> currentPrev = n.getPrev();
             currentPrev.setNext(currentNext);
             currentNext.setPrev(currentPrev);
             size--;
@@ -79,7 +100,7 @@ public class LinkedList<E> {
     }
 
     public void removeFirst() {
-        Node<E> n = first.getNext();
+        Node<T> n = first.getNext();
         n.setPrev(null);
         first.setNext(null);
         first = n;
@@ -87,11 +108,15 @@ public class LinkedList<E> {
     }
 
     public void removeLast() {
-        Node<E> n = last.getPrev();
+        Node<T> n = last.getPrev();
         n.setNext(null);
         last.setPrev(null);
         last = n;
         size--;
+    }
+
+    public void removeAfter(int position) {
+        remove(elementAt(position).getData());
     }
 
     public void removeAll() {
@@ -100,18 +125,30 @@ public class LinkedList<E> {
     }
 
     public void traverse() {
-        Node<E> n = first;
+        Node<T> n = first;
         while (n != null) {
-            System.out.println(n.getItem().toString());
+            System.out.println(n.getData().toString());
             n = n.getNext();
         }
     }
 
-    public Node<E> elementAt(int k) {
+    public T search(T data) {
+        Node<T> node = this.first;
+        while (node != null) {
+            if (node.getData().compareTo(data) == 0) {
+                return node.getData();
+            } else {
+                node = node.getNext();
+            }
+        }
+        return null;
+    }
+
+    public Node<T> elementAt(int k) {
         if (k > size - 1) {
             return null;
         }
-        Node<E> n = first;
+        Node<T> n = first;
         int i = 0;
         while (n != null) {
             if (i == k) {
@@ -124,20 +161,50 @@ public class LinkedList<E> {
         return null;
     }
 
-    public E getFirst() {
-        return first.getItem();
+    public LinkedList<T> sort() {
+        List<T> temp = new ArrayList<>();
+        Node<T> n = this.first;
+        while (n != null) {
+            temp.add(n.getData());
+            n = n.getNext();
+        }
+        Collections.sort(temp);
+        LinkedList<T> newTemp = new LinkedList<>();
+
+        for (T t : temp) {
+            newTemp.add(t);
+        }
+
+        return newTemp;
     }
 
-    public void setFirst(E e) {
-        linkFirst(e);
+    public Node<T> getNodeFirst() {
+        return first;
     }
 
-    public E getLast() {
-        return last.getItem();
+    public Node<T> getNodeLast() {
+        return last;
     }
 
-    public void setLast(E e) {
-        linkLast(e);
+    @Override
+    public int compareTo(Node<T> o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public T getFirst() {
+        return first.getData();
+    }
+
+    public void setFirst(T first) {
+        this.first.setData(first);
+    }
+
+    public T getLast() {
+        return last.getData();
+    }
+
+    public void setLast(T last) {
+        this.last.setData(last);
     }
 
     public int getSize() {
@@ -148,11 +215,4 @@ public class LinkedList<E> {
         this.size = size;
     }
 
-    public Node<E> getNodeFirst() {
-        return first;
-    }
-
-    public Node<E> getNodeLast() {
-        return last;
-    }
 }

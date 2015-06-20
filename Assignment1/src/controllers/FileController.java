@@ -63,7 +63,7 @@ public class FileController {
 
             Node<TaxPayer> n = taxPayers.getNodeFirst();
             while (n != null) {
-                TaxPayer tp = n.getItem();
+                TaxPayer tp = n.getData();
                 String[] info = {
                     tp.getCode(), tp.getName(),
                     Double.toString(tp.getIncome()),
