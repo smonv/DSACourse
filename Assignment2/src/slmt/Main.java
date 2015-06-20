@@ -15,7 +15,7 @@ public class Main {
         FileController fc = new FileController();
         TaxController tc = new TaxController();
         AVLTree<TaxPayer> taxPayers = fc.loadData();
-
+        int taxPayersDefaultSize = taxPayers.count();
         while (flag) {
             printMenu();
             String s = sc.nextLine();
@@ -33,29 +33,68 @@ public class Main {
                         break;
 
                     case 3:
+                        taxPayers.inOrderTraverse(taxPayers.getRoot());
                         break;
 
                     case 4:
+                        taxPayers.preOrderTraverse(taxPayers.getRoot());
                         break;
 
                     case 5:
                         taxPayers.breathFirstTraverse();
                         break;
 
+                    case 6:
+                        boolean result = fc.saveData(taxPayers);
+                        String msg = result ? "Data saved to file!" : "Failed to save data to file!";
+                        taxPayersDefaultSize = taxPayers.count();
+                        System.out.println(msg);
+                        break;
+
                     case 7:
                         System.out.println("Enter tax payer code: ");
                         String code = sc.nextLine();
                         TaxPayer tpSearch = new TaxPayer(code);
-                        TaxPayer tpResult = taxPayers.search(tpSearch).getData();
-                        System.out.println(tpResult.toString());
+                        TaxPayer tpResult = taxPayers.search(tpSearch);
+                        if (tpResult != null) {
+                            System.out.println(tpResult.toString());
+                        } else {
+                            System.out.println("Tax payer not found!");
+                        }
+                        break;
+
+                    case 8:
+                        System.out.println("Enter tax payer code: ");
+                        String codeDelete = sc.nextLine();
+                        TaxPayer tpDelete = new TaxPayer(codeDelete);
+                        taxPayers = taxPayers.remove(tpDelete);
+                        break;
 
                     case 9:
                         System.out.println("AVLTree is used, no need this function!");
                         break;
+
                     case 10:
                         System.out.println("Number of tax payers: " + taxPayers.count());
                         break;
                     case 0:
+                        if (taxPayersDefaultSize != taxPayers.count()) {
+                            System.out.println("Data modified but not save! Confirm exit(Y/N): ");
+                            String confirm = sc.nextLine();
+                            if ("Y".equals(confirm)) {
+                                fc.saveData(taxPayers);
+                            } else {
+                                flag = !confirm.equals("Y");
+                            }
+                        } else {
+                            flag = false;
+                        }
+
+                        if (!flag) {
+                            System.out.println("Program exiting...! Bye");
+                        } else {
+                            System.out.println("Use option 4 to save data!");
+                        }
                         break;
                 }
             }

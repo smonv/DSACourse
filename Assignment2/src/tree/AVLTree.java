@@ -1,6 +1,8 @@
 package tree;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class AVLTree<T extends Comparable<T>> {
@@ -15,7 +17,7 @@ public class AVLTree<T extends Comparable<T>> {
         return root == null;
     }
 
-    public T maximum() {
+    public T max() {
         Node<T> local = root;
         if (local == null) {
             return null;
@@ -26,7 +28,7 @@ public class AVLTree<T extends Comparable<T>> {
         return local.getData();
     }
 
-    public T minimum() {
+    public T min() {
         Node<T> local = root;
         if (local == null) {
             return null;
@@ -41,16 +43,16 @@ public class AVLTree<T extends Comparable<T>> {
         if (node == null) {
             return 0;
         }
-        return node.getDepth();
+        return node.getHeight();
     }
 
     public Node<T> insert(T data) {
         root = insert(root, data);
         switch (balanceNumber(root)) {
-            case 1:
+            case 2:
                 root = rotateLeft(root);
                 break;
-            case -1:
+            case -2:
                 root = rotateRight(root);
                 break;
             default:
@@ -63,12 +65,12 @@ public class AVLTree<T extends Comparable<T>> {
         if (node == null) {
             return new Node<>(data);
         }
+
+        // compare and recursive insert to child node
         if (node.getData().compareTo(data) > 0) {
-            node = new Node<>(node.getData(), insert(node.getLeft(), data),
-                    node.getRight());
+            node = new Node<>(node.getData(), insert(node.getLeft(), data), node.getRight());
         } else if (node.getData().compareTo(data) < 0) {
-            node = new Node<>(node.getData(), node.getLeft(), insert(
-                    node.getRight(), data));
+            node = new Node<>(node.getData(), node.getLeft(), insert(node.getRight(), data));
         }
         // After insert the new node, check and rebalance the current node if
         // necessary.
@@ -83,6 +85,28 @@ public class AVLTree<T extends Comparable<T>> {
                 return node;
         }
         return node;
+    }
+
+    // Simple remove node, recreate AVL Tree to ensure tree will be balanced
+    public AVLTree<T> remove(T data) {
+        AVLTree<T> temp = new AVLTree<>();
+        Queue<Node<T>> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            Node<T> node = queue.poll();
+            if (node.getData().compareTo(data) != 0) {
+                temp.insert(node.getData());
+            }
+            Node<T> left = node.getLeft();
+            Node<T> right = node.getRight();
+            if (left != null) {
+                queue.add(left);
+            }
+            if (right != null) {
+                queue.add(right);
+            }
+        }
+        return temp;
     }
 
     private int balanceNumber(Node<T> node) {
@@ -118,11 +142,11 @@ public class AVLTree<T extends Comparable<T>> {
         return p;
     }
 
-    public Node<T> search(T data) {
+    public T search(T data) {
         Node<T> local = root;
         while (local != null) {
             if (local.getData().compareTo(data) == 0) {
-                return local;
+                return local.getData();
             } else if (local.getData().compareTo(data) > 0) {
                 local = local.getLeft();
             } else {
@@ -147,36 +171,60 @@ public class AVLTree<T extends Comparable<T>> {
         }
     }
 
+    @Override
     public String toString() {
         return root.toString();
     }
 
     public void breathFirstTraverse() {
-        root.level = 0;
         Queue<Node<T>> queue = new LinkedList<>();
         queue.add(root);
         while (!queue.isEmpty()) {
             Node<T> node = queue.poll();
-            System.out.println(node);
-            int level = node.level;
+            System.out.println(node.getData());
             Node<T> left = node.getLeft();
             Node<T> right = node.getRight();
             if (left != null) {
-                left.level = level + 1;
                 queue.add(left);
             }
             if (right != null) {
-                right.level = level + 1;
                 queue.add(right);
             }
         }
     }
 
-    public void inOrderTraverse() {
-
+    public void inOrderTraverse(Node<T> local) {
+        if (local != null) {
+            inOrderTraverse(local.getLeft());
+            System.out.println(local.getData());
+            inOrderTraverse(local.getRight());
+        }
     }
 
-    public void preOrderTraverse() {
-
+    public void preOrderTraverse(Node<T> local) {
+        if (local != null) {
+            System.out.println(local.getData());
+            preOrderTraverse(local.getLeft());
+            preOrderTraverse(local.getRight());
+        }
     }
+
+    public List<T> inOrderTraverseToFile(Node<T> local) {
+        List<T> temp = new ArrayList<>();
+        if (local != null) {
+            temp.addAll(inOrderTraverseToFile(local.getLeft()));
+            temp.add(local.getData());
+            temp.addAll(inOrderTraverseToFile(local.getRight()));
+        }
+        return temp;
+    }
+
+    public Node<T> getRoot() {
+        return root;
+    }
+
+    public void setRoot(Node<T> root) {
+        this.root = root;
+    }
+
 }

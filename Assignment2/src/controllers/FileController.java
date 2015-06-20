@@ -5,7 +5,9 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import tree.AVLTree;
 
 public class FileController {
@@ -58,7 +60,22 @@ public class FileController {
         File newFile = new File(taxPayerFile);
         BufferedWriter bw = null;
         try {
+            bw = new BufferedWriter(new FileWriter(newFile, true));
+            List<TaxPayer> temp = taxPayers.inOrderTraverseToFile(taxPayers.getRoot());
+            for (TaxPayer tp : temp) {
+                String[] info = {
+                    tp.getCode(),
+                    tp.getName(),
+                    Double.toString(tp.getIncome()),
+                    Double.toString(tp.getDeduct()),
+                    Double.toString(tp.getTax())
+                };
 
+                String line = String.join(" | ", info);
+                bw.append(line);
+                bw.newLine();
+                bw.flush();
+            }
         } finally {
             if (bw != null) {
                 bw.close();

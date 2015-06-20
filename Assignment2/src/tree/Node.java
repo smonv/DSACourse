@@ -2,10 +2,9 @@ package tree;
 
 public class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
 
-    private T data;
-    private Node<T> left, right;
-    public int level;
-    private int depth;
+    private T data; // node data
+    private Node<T> left, right; // left child and right child
+    private int height; //height of node
 
     public Node(T data) {
         this(data, null, null);
@@ -16,14 +15,16 @@ public class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
         this.data = data;
         this.left = left;
         this.right = right;
+        
+        // set height of given node
         if (left == null && right == null) {
-            setDepth(1);
+            this.height = 1;
         } else if (left == null) {
-            setDepth(right.getDepth() + 1);
+            this.height = right.getHeight() + 1;
         } else if (right == null) {
-            setDepth(left.getDepth() + 1);
+            this.height = left.getHeight() + 1;
         } else {
-            setDepth(Math.max(left.getDepth(), right.getDepth()) + 1);
+            this.height = Math.max(left.getHeight(), right.getHeight()) + 1;
         }
 
     }
@@ -57,16 +58,12 @@ public class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
         this.right = right;
     }
 
-    public int getDepth() {
-        return depth;
+    public int getHeight() {
+        return height;
     }
 
-    public void setDepth(int depth) {
-        this.depth = depth;
+    public void setHeight(int height) {
+        this.height = height;
     }
 
-    @Override
-    public String toString() {
-        return "Level " + level + ": " + data;
-    }
 }
