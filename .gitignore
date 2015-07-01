@@ -1,6 +1,7 @@
 manifest.mf
 **/nbproject/
 **/bin/
+**/build/
 /Assignment1/nbproject/private/
 /Assignment1/build/
 /Assignment1/dist/
