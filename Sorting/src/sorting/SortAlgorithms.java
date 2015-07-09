@@ -68,19 +68,11 @@ public class SortAlgorithms {
     }
 
     public void quickSort(int[] a, int low, int high) {
-
         int i = low;
         int j = high;
 
         int pivot = a[low + (high - low) / 2];
-        // Divide into two arrays
         while (i <= j) {
-            /**
-             * In each iteration, we will identify a number from left side which
-             * is greater then the pivot value, and also we will identify a
-             * number from right side which is less then the pivot value. Once
-             * the search is done, then we exchange both numbers.
-             */
             while (a[i] < pivot) {
                 i++;
             }
@@ -89,12 +81,10 @@ public class SortAlgorithms {
             }
             if (i <= j) {
                 swap(a, i, j);
-                //move index to next position on both sides
                 i++;
                 j--;
             }
         }
-        // call quickSort() method recursively
         if (low < j) {
             quickSort(a, low, j);
         }
